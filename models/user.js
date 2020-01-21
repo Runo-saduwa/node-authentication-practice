@@ -49,11 +49,16 @@ userSchema.pre('save', async function(next) {
 	next();
 });
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = async function(password) {
+    let user = this;
+    const isMatch = await bcrypt.compare(password, user.local.password);
+    console.log(isMatch)
+    return isMatch;
+
     //return bcrypt.compareSync(password, this.local.password);
-    bcrypt.compare(password, this.local.password).then((res) => {
-        return res;
-    });
+    // bcrypt.compare(password, user.local.password).then((res) => {
+    //     return res;
+    // });
 };
 
 // create the model for users and expose it to our app
